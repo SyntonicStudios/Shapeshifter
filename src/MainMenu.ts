@@ -1,6 +1,6 @@
 /// <reference path="../tsDefinitions/phaser.comments.d.ts" />
 
-module Castlevania {
+module Shapeshifter {
  
     export class MainMenu extends Phaser.State {
  

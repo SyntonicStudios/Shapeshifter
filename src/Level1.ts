@@ -1,18 +1,21 @@
 /// <reference path="../tsDefinitions/phaser.comments.d.ts" />
 /// <reference path="Player.ts" />
 
-module Castlevania {
+module Shapeshifter {
     export class Level1 extends Phaser.State {
  
-        background: Phaser.Sprite;
+        background: Phaser.TileSprite;
         music: Phaser.Sound;
-        player: Castlevania.Player;
+        player: Shapeshifter.Player;
  
         create() {
-            this.background = this.add.sprite(0, 0, 'level1');
+            // this.background = this.add.sprite(0, 0, 'level1');
+            
+            // Set up TileSet background
+            this.background = this.add.tileSprite(0, 0, 600, 800, 'level1ground');
  
-            this.music = this.add.audio('music', 1, false);
-            this.music.play();
+            // this.music = this.add.audio('music', 1, false);
+            // this.music.play();
  
             this.player = new Player(this.game, 130, 284);
         }
