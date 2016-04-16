@@ -37,17 +37,19 @@ module Shapeshifter {
           this.scale.x = 1;
         }
       }
-      else if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+      
+      if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
  
         this.body.velocity.y = 250;
-        this.animations.play('walkDown');
+        if (this.body.velocity.x == 0) {this.animations.play('walkDown');}
       }
       else if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
  
         this.body.velocity.y = -250;
-        this.animations.play('walkUp');
-      }      
-      else {
+        if (this.body.velocity.x == 0) {this.animations.play('walkUp');}
+      }
+            
+      if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {    // No Keys Pressed 
         this.animations.frame = 4;
       }
     }
