@@ -17,6 +17,7 @@ module Shapeshifter {
       this.load.audio('music', 'assets/title.mp3', true);
       // this.load.spritesheet('simon', 'assets/simon.png', 58, 96, 5);
       this.load.spritesheet('rabbit', 'assets/rabbitSpriteSheet.png', 40, 40, 6);
+      this.load.spritesheet('bat', 'assets/batSpriteSheet2.png', 60, 40, 2);
       // this.load.image('level1', 'assets/level1.png');
       this.load.image('level1ground', 'assets/caveFloorTile.png');
     }

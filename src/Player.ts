@@ -8,6 +8,7 @@ module Shapeshifter {
       super(game, x, y, 'rabbit', 0);
       // Enable Player's Physics Body
       this.game.physics.arcade.enableBody(this);
+      this.body.collideWorldBounds = true;
       this.anchor.setTo(0.5, 0);
       this.animations.add('walkSideways', [0, 1], 5, true);
       this.animations.add('walkDown', [2, 3], 5, true);
@@ -50,7 +51,8 @@ module Shapeshifter {
       }
             
       if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {    // No Keys Pressed 
-        this.animations.frame = 4;
+        // this.animations.frame = 4;
+        this.animations.play('walkUp');
       }
     }
   }
