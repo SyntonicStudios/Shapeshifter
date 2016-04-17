@@ -20,6 +20,7 @@ module Shapeshifter {
       this.load.spritesheet('bat', 'assets/batSpriteSheet2.png', 60, 40, 2);
       // this.load.image('level1', 'assets/level1.png');
       this.load.image('level1ground', 'assets/caveFloorTile.png');
+      this.load.image('healthBar', 'assets/healthBar.png');
     }
  
     create() {

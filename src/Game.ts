@@ -37,7 +37,7 @@ module Shapeshifter {
 
 // When the page has finished loading, create our game
 window.onload = () => {
-  // game = new Shapeshifter.Game();
-  var game;
-	game = new Shapeshifter.Game();
+  game = new Shapeshifter.Game();
+  // var game;
+	// game = new Shapeshifter.Game();
 }
