@@ -22,7 +22,7 @@ module Shapeshifter {
  
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
  
-        this.body.velocity.x = -250;
+        this.body.velocity.x = -Shapeshifter.Game.RABBIT_WALK_SPEED;
         this.animations.play('walkSideways');
  
         if (this.scale.x == 1) {
@@ -31,7 +31,7 @@ module Shapeshifter {
       }
       else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
  
-        this.body.velocity.x = 250;
+        this.body.velocity.x = Shapeshifter.Game.RABBIT_WALK_SPEED;
         this.animations.play('walkSideways');
  
         if (this.scale.x == -1) {
@@ -41,12 +41,12 @@ module Shapeshifter {
       
       if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
  
-        this.body.velocity.y = 250;
+        this.body.velocity.y = Shapeshifter.Game.RABBIT_WALK_SPEED;
         if (this.body.velocity.x == 0) {this.animations.play('walkDown');}
       }
       else if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
  
-        this.body.velocity.y = -250;
+        this.body.velocity.y = -Shapeshifter.Game.RABBIT_WALK_SPEED;
         if (this.body.velocity.x == 0) {this.animations.play('walkUp');}
       }
             

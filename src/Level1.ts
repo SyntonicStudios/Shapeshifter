@@ -13,10 +13,10 @@ module Shapeshifter {
  
     create() {
       // Setup World
-			this.game.world.setBounds(0, 0, 700, 800);
+			this.game.world.setBounds(0, 0, Shapeshifter.Game.WORLD_WIDTH, Shapeshifter.Game.WORLD_HEIGHT);
       
       // Set up TileSet background
-      this.background = this.add.tileSprite(0, 0, 700, 800, 'level1ground');
+      this.background = this.add.tileSprite(0, 0, Shapeshifter.Game.WORLD_WIDTH, Shapeshifter.Game.WORLD_HEIGHT, 'level1ground');
       
       this.player = new Player(this.game, 130, 284);
       
@@ -24,8 +24,13 @@ module Shapeshifter {
       // Add a bat to the middle of the screen for now
       this.enemies = this.game.add.group();
       // this.enemies.create(300, 400, "bat1");
-      var bat = new Bat(this.game, 300, 400);
-      this.enemies.add(bat);
+			for (let i = 0; i < 30; i++) {
+        // Need to place them randomly
+				var bat = new Bat(this.game, this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40), -200);
+				this.enemies.add(bat);
+				bat.exists = false; 
+				bat.alive = false;
+			}
             
       // Setup Camera
       this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
