@@ -3,11 +3,15 @@
 module Shapeshifter {
 
   export enum PlayerState { Grounded, Airborne, Dead, Transforming };
+  export enum PlayerForm { Rabbit, Wizard, Crow };
  
   export class Player extends Phaser.Sprite {
 
     playerState: PlayerState;
+    playerForm: PlayerForm;
     healthBar: Phaser.Sprite;
+    hasWizardForm: boolean;
+    hasCrowForm: boolean;
     // Keyboard Keys
     keyQ:Phaser.Key; keyW:Phaser.Key; keyEnter:Phaser.Key;
  
@@ -29,6 +33,9 @@ module Shapeshifter {
       this.healthBar.anchor.setTo(0,1);        
       this.healthBar.scale.setTo(1, 0.5);        
       this.healthBar.fixedToCamera = true;
+      
+      this.hasWizardForm = false;
+      this.hasCrowForm = false;
       
       // Define Keyboard Keys we will need
       this.keyQ = this.game.input.keyboard.addKey(Phaser.Keyboard.C);

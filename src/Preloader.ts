@@ -23,6 +23,7 @@ module Shapeshifter {
       this.load.image('healthBar', 'assets/healthBar.png');
       this.load.image('wizardBubble', 'assets/wizardBubble.png');
       this.load.image('crowBubble', 'assets/wizardBubble.png');
+      this.load.image('wizardSpriteSheet', 'assets/wizardSpriteSheet.png');
       // Sounds
       this.load.audio('mobDying', 'assets/SFX/mobDying.ogg', true);
       this.load.audio('playerDying', 'assets/SFX/playerDying.ogg', true);
