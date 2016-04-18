@@ -18,12 +18,12 @@ module Shapeshifter {
       // this.load.spritesheet('simon', 'assets/simon.png', 58, 96, 5);
       this.load.spritesheet('rabbit', 'assets/rabbitSpriteSheet.png', 40, 40, 6);
       this.load.spritesheet('bat', 'assets/batSpriteSheet2.png', 60, 40, 2);
+      this.load.spritesheet('wizardSpriteSheet', 'assets/wizardSpriteSheet.png', 28, 60, 5);
       // this.load.image('level1', 'assets/level1.png');
       this.load.image('level1ground', 'assets/caveFloorTile.png');
       this.load.image('healthBar', 'assets/healthBar.png');
       this.load.image('wizardBubble', 'assets/wizardBubble.png');
       this.load.image('crowBubble', 'assets/wizardBubble.png');
-      this.load.image('wizardSpriteSheet', 'assets/wizardSpriteSheet.png');
       // Sounds
       this.load.audio('mobDying', 'assets/SFX/mobDying.ogg', true);
       this.load.audio('playerDying', 'assets/SFX/playerDying.ogg', true);

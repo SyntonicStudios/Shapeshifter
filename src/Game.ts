@@ -16,6 +16,7 @@ module Shapeshifter {
     public static get WORLD_HEIGHT():number { return 800; }
     
     public static get GAME_SCROLL_SPEED():number { return 1; }
+    public static get VELOCITY_TO_MATCH_SCROLL_SPEED():number { return 60; }
     
     public static get RABBIT_WALK_SPEED():number { return 250; }
  

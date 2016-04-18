@@ -22,8 +22,8 @@
 
 	// args is the HelloWorld program to compile.
 	// "args": ["HelloWorld.ts"],
-	// "args": ["--out","bin/js/game.js", "-sourceMap", "--removeComments"],
-	"args": ["--out","bin/js/game.js", "-sourceMap", "--watch", "--removeComments"],
+	"args": ["--out","bin/js/game.js", "-sourceMap", "--removeComments"],
+	// "args": ["--out","bin/js/game.js", "-sourceMap", "--watch", "--removeComments"],
 
 	// use the standard tsc problem matcher to find compile problems
 	// in the output.

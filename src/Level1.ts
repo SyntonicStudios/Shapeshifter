@@ -10,6 +10,7 @@ module Shapeshifter {
     background: Phaser.TileSprite;
     music: Phaser.Sound;
     getPowerUpSound: Phaser.Sound;
+    playerHurtSound: Phaser.Sound;
     // Game Objects
     player: Shapeshifter.Player;
     enemies: Phaser.Group;
@@ -29,6 +30,7 @@ module Shapeshifter {
       // this.music = this.add.audio('music', 1, false);
       // this.music.play();
       this.getPowerUpSound = this.game.add.audio('wizardShooting');
+      this.playerHurtSound = this.game.add.audio('playerHurt');
       
       // Setup player
       this.player = new Player(this.game, Shapeshifter.Game.WORLD_WIDTH / 2, Shapeshifter.Game.WORLD_HEIGHT - 20);
@@ -72,7 +74,10 @@ module Shapeshifter {
     
     playerVsEnemy(player:Player, enemy) {
       enemy.kill();
-      player.takeDamage(20);
+      if (player.takeDamageCooldown < 1) {
+        player.takeDamage(20);
+        this.playerHurtSound.play();
+      }
     }
     
     playerVsPowerUp(player:Player, powerUp:PowerUp) {
@@ -95,6 +100,12 @@ module Shapeshifter {
           let brownBat:Bat = this.enemies.getFirstExists(false);
           brownBat.reviveAsBrownBat();
          });
+    }
+    
+    render() {
+      this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
+       hasWizardForm: ${this.player.hasWizardForm}`
+        , 10, 120);  
     }
     
   }
