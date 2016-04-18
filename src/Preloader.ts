@@ -21,6 +21,16 @@ module Shapeshifter {
       // this.load.image('level1', 'assets/level1.png');
       this.load.image('level1ground', 'assets/caveFloorTile.png');
       this.load.image('healthBar', 'assets/healthBar.png');
+      this.load.image('wizardBubble', 'assets/wizardBubble.png');
+      this.load.image('crowBubble', 'assets/wizardBubble.png');
+      // Sounds
+      this.load.audio('mobDying', 'assets/SFX/mobDying.ogg', true);
+      this.load.audio('playerDying', 'assets/SFX/playerDying.ogg', true);
+      this.load.audio('playerHurt', 'assets/SFX/playerHurt.ogg', true);
+      this.load.audio('rabbitJump', 'assets/SFX/rabbitJump.ogg', true);
+      this.load.audio('transform', 'assets/SFX/transform.ogg', true);
+      this.load.audio('wizardShooting', 'assets/SFX/wizardShooting.ogg', true);
+      this.load.audio('wizardShootingSubdued', 'assets/SFX/wizardShootingSubdued.ogg', true);
     }
  
     create() {

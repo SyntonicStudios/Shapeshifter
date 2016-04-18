@@ -1,5 +1,6 @@
 /// <reference path="../tsDefinitions/phaser.comments.d.ts" />
 /// <reference path="Player.ts" />
+/// <reference path="PowerUp.ts" />
 /// <reference path="Bat.ts" />
 
 module Shapeshifter {
@@ -41,7 +42,8 @@ module Shapeshifter {
       
       // --Timed High Level Events--
       // Setup first wave of Brown Bats
-      var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND * 3, this.startBrownBatWave, this);
+      // var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
+      var powerUp1Timer = this.game.time.events.add(Phaser.Timer.SECOND, 				() => { var powerUp1 = new PowerUp(this.game, PowerUpType.Wizard) }, this);
       
       // this.background = this.add.sprite(0, 0, 'level1');
  
@@ -53,7 +55,7 @@ module Shapeshifter {
       this.physics.arcade.overlap(this.player, this.enemies, this.playerVsEnemy, null, this);
       
       // Constantly scroll the tileSprite background
-      this.background.tilePosition.y++;
+      this.background.tilePosition.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
     }
     
     playerVsEnemy(player:Player, enemy) {
@@ -61,6 +63,9 @@ module Shapeshifter {
       player.takeDamage(20);
     }
     
+    /**
+     * Lasts 9 seconds
+     */
     startBrownBatWave() {
       this.game.time.events.repeat(300, 30, 
         () => { 
