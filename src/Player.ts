@@ -12,7 +12,6 @@ module Shapeshifter {
   ]; 
  
   export class Player extends Phaser.Sprite {
-
     playerState: PlayerState;
     // playerForm: PlayerForm;
     playerFormIndex: number;
@@ -22,12 +21,15 @@ module Shapeshifter {
     // Sounds
     playerDyingSound: Phaser.Sound;
     transformationSound: Phaser.Sound;
+    wizardShootingSound: Phaser.Sound;
     // Timers
     takeDamageCooldown: number;
     transformationCooldown: number;
+    wizardShootingCooldown: number;
     // Keyboard Keys
     keyQ:Phaser.Key; keyW:Phaser.Key; keyEnter:Phaser.Key;
     // key1:Phaser.Key;
+    playerBulletPool: Phaser.Group;
  
     constructor(game: Phaser.Game, x: number, y: number) {
       super(game, x, y, 'rabbit', 0);
@@ -63,16 +65,21 @@ module Shapeshifter {
       // Sound
       this.playerDyingSound = this.game.add.audio('playerDying');
       this.transformationSound = this.game.add.audio('transform');
+      this.wizardShootingSound = this.game.add.audio('wizardShootingSubdued');
       
       // Timers
       this.takeDamageCooldown = 0;
       this.transformationCooldown = 0;
+      this.wizardShootingCooldown = 0;
       
       // Define Keyboard Keys we will need
       this.keyQ = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
       this.keyW = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
       this.keyEnter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
       // this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+      
+      // Create Player Bullet Pool
+      this.createPlayerBulletPool();
     }
  
     update() {
@@ -86,6 +93,8 @@ module Shapeshifter {
         this.takeDamageCooldown--;
       if (this.transformationCooldown >= 1) 
         this.transformationCooldown--;
+      if (this.wizardShootingCooldown >= 1) 
+        this.wizardShootingCooldown--;
  
       this.handleKeys();
     }
@@ -120,9 +129,24 @@ module Shapeshifter {
             if (this.body.velocity.x == 0) {this.animations.play(Forms[this.playerFormIndex].walkUpName);}
           }
           
+          // Action Button
+          if (this.game.input.keyboard.isDown(Phaser.Keyboard.Q)) {
+            if (this.playerFormIndex == PlayerForm.Wizard) {
+              this.animations.play('wizardWalkAndShoot');
+              if (this.transformationCooldown < 1) {
+                this.wizardShootingSound.play();
+                this.transformationCooldown = 10;
+                var bullet = this.playerBulletPool.getFirstExists(false);
+                bullet.reset(this.x, this.y - 20);
+
+                bullet.body.velocity.y = -500;
+              }
+            }
+          }
+          
           // Transform into Wizard
           if (this.game.input.keyboard.isDown(Phaser.Keyboard.TWO)) {
-            if (this.hasWizardForm && this.playerFormIndex != PlayerForm.Wizard && this.transformationCooldown < 1) {
+            if (this.hasWizardForm && this.playerFormIndex != PlayerForm.Wizard && (this.transformationCooldown < 1)) {
               this.transformationSound.play();
               this.playerState = PlayerState.Transforming;
               this.transformationCooldown = 60;
@@ -181,6 +205,17 @@ module Shapeshifter {
       let gameOverText = `GAME OVER
       PRESS ENTER TO RESTART`;
       let text = this.game.add.text(this.game.camera.x + 30, this.game.world.centerY - 40, gameOverText, textStyle);
+    }
+    
+    createPlayerBulletPool() {
+      this.playerBulletPool = this.game.add.group();
+      this.playerBulletPool.enableBody = true;
+      this.playerBulletPool.physicsBodyType = Phaser.Physics.ARCADE;
+      this.playerBulletPool.createMultiple(100, 'wizardBullet');
+      this.playerBulletPool.setAll('anchor.x', 0.5);
+      this.playerBulletPool.setAll('anchor.y', 0.5);
+      this.playerBulletPool.setAll('outOfBoundsKill', true);
+      this.playerBulletPool.setAll('checkWorldBounds', true);
     }
     
   }

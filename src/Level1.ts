@@ -103,9 +103,11 @@ module Shapeshifter {
     }
     
     render() {
-      this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
-       hasWizardForm: ${this.player.hasWizardForm}`
-        , 10, 120);  
+      if (Shapeshifter.Game.DEBUG_MODE) {
+        this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
+        hasWizardForm: ${this.player.hasWizardForm}`
+          , 10, 120);  
+      }
     }
     
   }
