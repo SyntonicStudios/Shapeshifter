@@ -97,7 +97,7 @@ module Shapeshifter {
       let textStyle = { font: "32px Arial", fill: "#ff0000", align: "center" };
       let gameOverText = `GAME OVER
       PRESS ENTER TO RESTART`;
-      let text = this.game.add.text(this.game.camera.x + 90, this.game.world.centerY - 40, gameOverText, textStyle);
+      let text = this.game.add.text(this.game.camera.x + 30, this.game.world.centerY - 40, gameOverText, textStyle);
     }
     
   }
