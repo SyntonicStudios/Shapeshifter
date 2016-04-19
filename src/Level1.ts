@@ -111,8 +111,7 @@ module Shapeshifter {
       this.game.time.events.repeat(300, 30, 
         () => { 
           let brownBat:Bat = this.enemies.getFirstExists(false);
-          if (brownBat)
-            brownBat.reviveAsBrownBat();
+          brownBat.reviveAsBrownBat();
          });
     }
     
@@ -123,7 +122,7 @@ module Shapeshifter {
         Sorry there is so little "game" here, thanks for playing anyway`;
         let text = this.game.add.text(0, 0, gameOverText, textStyle);
         text.fixedToCamera = true;
-        text.cameraOffset.setTo(30, 300);
+        text.cameraOffset.setTo(-20, 300);
       }
     }
     
