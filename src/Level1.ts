@@ -11,6 +11,7 @@ module Shapeshifter {
     music: Phaser.Sound;
     getPowerUpSound: Phaser.Sound;
     playerHurtSound: Phaser.Sound;
+    enemyDyingSound: Phaser.Sound;
     // Game Objects
     player: Shapeshifter.Player;
     enemies: Phaser.Group;
@@ -31,6 +32,7 @@ module Shapeshifter {
       // this.music.play();
       this.getPowerUpSound = this.game.add.audio('wizardShooting');
       this.playerHurtSound = this.game.add.audio('playerHurt');
+      this.enemyDyingSound = this.game.add.audio('mobDying');
       
       // Setup player
       this.player = new Player(this.game, Shapeshifter.Game.WORLD_WIDTH / 2, Shapeshifter.Game.WORLD_HEIGHT - 20);
@@ -62,10 +64,15 @@ module Shapeshifter {
         var powerUp1 = new PowerUp(this.game, PowerUpType.Wizard);
         this.powerUps.add(powerUp1); 
       }, this);
+      var wave2Timer = this.game.time.events.add(Phaser.Timer.SECOND * 9, this.startBrownBatWave, this);
+      var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, this.startBrownBatWave, this);
+      // Victory condition
+      var victoryCondition = this.game.time.events.add(Phaser.Timer.SECOND * 36, this.stageDefeated, this);
     }
     
     update() {
       this.physics.arcade.overlap(this.player, this.enemies, this.playerVsEnemy, null, this);
+      this.physics.arcade.overlap(this.player.playerBulletPool, this.enemies, this.playerBulletVsEnemy, null, this);
       this.physics.arcade.overlap(this.player, this.powerUps, this.playerVsPowerUp, null, this);
       
       // Constantly scroll the tileSprite background
@@ -78,6 +85,12 @@ module Shapeshifter {
         player.takeDamage(20);
         this.playerHurtSound.play();
       }
+    }
+    
+    playerBulletVsEnemy(bullet, enemy) {
+      enemy.kill();
+      bullet.kill();
+      this.enemyDyingSound.play();
     }
     
     playerVsPowerUp(player:Player, powerUp:PowerUp) {
@@ -98,8 +111,20 @@ module Shapeshifter {
       this.game.time.events.repeat(300, 30, 
         () => { 
           let brownBat:Bat = this.enemies.getFirstExists(false);
-          brownBat.reviveAsBrownBat();
+          if (brownBat)
+            brownBat.reviveAsBrownBat();
          });
+    }
+    
+    stageDefeated() {
+      if (this.player.playerState != PlayerState.Dead) {
+        let textStyle = { font: "20px Arial", fill: "#ff0000", align: "center" };
+        let gameOverText = `YOU ARE WINNER
+        Sorry there is so little "game" here, thanks for playing anyway`;
+        let text = this.game.add.text(0, 0, gameOverText, textStyle);
+        text.fixedToCamera = true;
+        text.cameraOffset.setTo(30, 300);
+      }
     }
     
     render() {
