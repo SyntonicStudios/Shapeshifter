@@ -8,7 +8,7 @@ module Shapeshifter {
  
     // Graphics and Sound
     background: Phaser.TileSprite;
-    music: Phaser.Sound;
+    ssLevel1Theme: Phaser.Sound;
     getPowerUpSound: Phaser.Sound;
     playerHurtSound: Phaser.Sound;
     enemyDyingSound: Phaser.Sound;
@@ -28,8 +28,8 @@ module Shapeshifter {
       this.background = this.add.tileSprite(0, 0, Shapeshifter.Game.WORLD_WIDTH, Shapeshifter.Game.WORLD_HEIGHT, 'level1ground');
       
       // Set up Sound
-      // this.music = this.add.audio('music', 1, false);
-      // this.music.play();
+      this.ssLevel1Theme = this.add.audio('ssLevel1Theme', 0.3, false);
+      this.ssLevel1Theme.play();
       this.getPowerUpSound = this.game.add.audio('wizardShooting');
       this.playerHurtSound = this.game.add.audio('playerHurt');
       this.enemyDyingSound = this.game.add.audio('mobDying');
@@ -111,7 +111,8 @@ module Shapeshifter {
       this.game.time.events.repeat(300, 30, 
         () => { 
           let brownBat:Bat = this.enemies.getFirstExists(false);
-          brownBat.reviveAsBrownBat();
+          if (brownBat)
+            brownBat.reviveAsBrownBat();
          });
     }
     

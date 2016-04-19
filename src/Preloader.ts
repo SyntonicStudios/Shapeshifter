@@ -33,6 +33,8 @@ module Shapeshifter {
       this.load.audio('transform', 'assets/SFX/transform.ogg', true);
       this.load.audio('wizardShooting', 'assets/SFX/wizardShooting.ogg', true);
       this.load.audio('wizardShootingSubdued', 'assets/SFX/wizardShootingSubdued.ogg', true);
+      // Music
+      this.load.audio('ssLevel1Theme', 'assets/ssLevel1Theme.ogg', true);
     }
  
     create() {
