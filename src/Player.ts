@@ -182,7 +182,11 @@ module Shapeshifter {
           }
           break;
         case PlayerState.Dead:
-            this.keyEnter.onDown.add(() => this.game.state.start('Level1', true, false));
+          this.keyEnter.onDown.add(() => {
+            this.game.sound.stopAll(); 
+            this.game.state.start('Level1', true, false) 
+          });
+          break;
       }
       
     }
