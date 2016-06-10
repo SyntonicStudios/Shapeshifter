@@ -36,7 +36,7 @@ module Shapeshifter {
       // Enable Player's Physics Body
       this.game.physics.arcade.enableBody(this);
       this.body.collideWorldBounds = true;
-      this.anchor.setTo(0.5, 0);
+      this.anchor.setTo(.5, .5);
       
       // Animations - Rabbit
       this.animations.add('walkSideways', [0, 1], 5, true);
@@ -83,6 +83,9 @@ module Shapeshifter {
     }
  
     update() {
+      // this.body.velocity.x = 0;
+      // this.body.velocity.y = 0;
+
       if (this.playerState != PlayerState.Transforming) {
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;        
@@ -97,6 +100,10 @@ module Shapeshifter {
         this.wizardShootingCooldown--;
  
       this.handleKeys();
+
+      // Need to explicitly set the left game-world barrier
+      // DELETE ME: Actually this is tied to a physics body bug
+      // if (this.x < 15) this.x = 18;
     }
     
     private handleKeys() {
@@ -104,9 +111,7 @@ module Shapeshifter {
       switch (this.playerState) {
         case PlayerState.Grounded:
           if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            // this.body.velocity.x = -Shapeshifter.Game.RABBIT_WALK_SPEED;
             this.body.velocity.x = -Forms[this.playerFormIndex].movementSpeed;
-            // this.animations.play('walkSideways');
             this.animations.play(Forms[this.playerFormIndex].walkSidewaysName);
             if (this.scale.x == 1) {
               this.scale.x = -1;

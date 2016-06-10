@@ -8,7 +8,9 @@ module Shapeshifter {
   export class Game extends Phaser.Game {
   
     // Game-wide Constants
-    public static get DEBUG_MODE():boolean { return false; }
+    public static get DEBUG_MODE():boolean { return true; }
+    public static get MUTE_SOUND():boolean { return true; }
+    public static get EMPTY_ROOM():boolean { return true; }
     
     public static get GAME_WIDTH():number { return 600; }
     public static get GAME_HEIGHT():number { return 800; }
@@ -40,7 +42,10 @@ module Shapeshifter {
 
 // When the page has finished loading, create our game
 window.onload = () => {
-  // game = new Shapeshifter.Game();
-  var game;
-	game = new Shapeshifter.Game();
+  // To debug in the browser console, use this
+  game = new Shapeshifter.Game();
+
+  // To avoid errors, use this
+  // var game;
+	// game = new Shapeshifter.Game();
 }

@@ -33,6 +33,7 @@ module Shapeshifter {
       this.getPowerUpSound = this.game.add.audio('wizardShooting');
       this.playerHurtSound = this.game.add.audio('playerHurt');
       this.enemyDyingSound = this.game.add.audio('mobDying');
+      if (Shapeshifter.Game.MUTE_SOUND) this.game.sound.mute = true;
       
       // Setup player
       this.player = new Player(this.game, Shapeshifter.Game.WORLD_WIDTH / 2, Shapeshifter.Game.WORLD_HEIGHT - 20);
@@ -59,15 +60,17 @@ module Shapeshifter {
       
       // --Timed High Level Events--
       // Setup first wave of Brown Bats
-      var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
-      var powerUp1Timer = this.game.time.events.add(Phaser.Timer.SECOND * 7, 				() => { 
-        var powerUp1 = new PowerUp(this.game, PowerUpType.Wizard);
-        this.powerUps.add(powerUp1); 
-      }, this);
-      var wave2Timer = this.game.time.events.add(Phaser.Timer.SECOND * 9, this.startBrownBatWave, this);
-      var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, this.startBrownBatWave, this);
-      // Victory condition
-      var victoryCondition = this.game.time.events.add(Phaser.Timer.SECOND * 36, this.stageDefeated, this);
+      if (!Shapeshifter.Game.EMPTY_ROOM) {
+        var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
+        var powerUp1Timer = this.game.time.events.add(Phaser.Timer.SECOND * 7, 				() => { 
+          var powerUp1 = new PowerUp(this.game, PowerUpType.Wizard);
+          this.powerUps.add(powerUp1); 
+        }, this);
+        var wave2Timer = this.game.time.events.add(Phaser.Timer.SECOND * 9, this.startBrownBatWave, this);
+        var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, this.startBrownBatWave, this);
+        // Victory condition
+        var victoryCondition = this.game.time.events.add(Phaser.Timer.SECOND * 36, this.stageDefeated, this);
+      }
     }
     
     update() {
@@ -131,9 +134,17 @@ module Shapeshifter {
       if (Shapeshifter.Game.DEBUG_MODE) {
         this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
         hasWizardForm: ${this.player.hasWizardForm}`
-          , 10, 120);  
-      }
-    }
+          , 10, 120);
+        this.game.debug.spriteInfo(this.player, 32, 32);
+        // Sprite Body Debugging
+        this.game.debug.body(this.player);
+        // this.game.debug.body(this.enemies);
+
+        // call renderGroup on each of the alive members    
+        this.enemies.forEachAlive((member) => this.game.debug.body(member),       this);
+
+      } // end of if DEBUG MODE
+    } // render()
     
   }
 } 
