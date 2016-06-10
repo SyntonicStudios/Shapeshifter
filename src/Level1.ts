@@ -135,6 +135,10 @@ module Shapeshifter {
         this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
         hasWizardForm: ${this.player.hasWizardForm}`
           , 10, 120);
+        // Player X Scale: ${this.player.scale.x}
+        this.game.debug.text(`Player X Scale: ${this.player.scale.x}`
+          , 10, 140);
+
         this.game.debug.spriteInfo(this.player, 32, 32);
         // Sprite Body Debugging
         this.game.debug.body(this.player);
