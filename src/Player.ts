@@ -207,6 +207,7 @@ module Shapeshifter {
     }
     
     die() {
+      this.healthBar.visible = false;
       this.playerDyingSound.play();
       this.playerState = PlayerState.Dead;
       this.kill();

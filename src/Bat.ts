@@ -6,10 +6,12 @@ module Shapeshifter {
     
     isDamaged: boolean;
     enemyBulletPool: Phaser.Group;
+    player: Shapeshifter.Player;
  
-    constructor(game: Phaser.Game, x: number, y: number, enemyBulletPool: Phaser.Group) {
+    constructor(game: Phaser.Game, x: number, y: number, enemyBulletPool: Phaser.Group, player: Shapeshifter.Player) {
       super(game, x, y, 'bat', 0);
       this.enemyBulletPool = enemyBulletPool;
+      this.player = player;
       this.game.physics.arcade.enableBody(this);
       this.body.collideWorldBounds = false;
       this.anchor.setTo(0.5, 0);
@@ -68,6 +70,25 @@ module Shapeshifter {
       let tweenDown = this.game.add.tween(this).to( { y: 150 }, 3000, "Quart.easeOut");
       tweenDown.onComplete.addOnce(this.shootAsBlue, this);
       let tweenUp = this.game.add.tween(this).to( { y: -100 }, 3000, "Quart.easeOut");
+      tweenUp.onComplete.addOnce(() => this.kill(), this);
+      tweenDown.chain(tweenUp);
+      tweenDown.start();
+    }
+
+    reviveAsOrangeBat() {
+      this.revive(50);
+      this.maxHealth = this.health;
+      this.isDamaged = false;
+      // this.damageBlinkLast = 0;
+      this.tint = 0xF6AB26;
+      
+      this.x = this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40);
+      this.animations.play('fly');
+      // Use tween to make it fly down, shoot, then fly back up
+      let tweenDown = this.game.add.tween(this).to( { y: 150 }, 3000, "Quart.easeOut");
+      tweenDown.onComplete.addOnce(this.shootAsOrange, this);
+      let tweenUp = this.game.add.tween(this).to( { y: -100 }, 3000, "Quart.easeOut");
+      tweenUp.onComplete.addOnce(() => this.kill(), this);
       tweenDown.chain(tweenUp);
       tweenDown.start();
     }
@@ -79,6 +100,16 @@ module Shapeshifter {
       bullet.reset(this.x, this.y - 20);
 
       bullet.body.velocity.y = 300;
+    }
+
+    shootAsOrange() {
+      // console.log('orange shot');
+      let bullet = this.enemyBulletPool.getFirstExists(false);
+      bullet.reset(this.x, this.y - 20);
+      // bullet.body.velocity.y = 300;
+      // let shotAngle = this.getAngleTo(this.player);
+      let shotAngle = this.game.physics.arcade.angleBetween(this, this.player);
+      this.game.physics.arcade.velocityFromAngle(Phaser.Math.radToDeg(shotAngle) , 300, bullet.body.velocity);
     }
   
     // TODO: Implement this cool damage effect in a more generic mob class  

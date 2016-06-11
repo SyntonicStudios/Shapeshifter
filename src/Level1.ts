@@ -48,7 +48,7 @@ module Shapeshifter {
       // this.enemies.create(300, 400, "bat1");
 			for (let i = 0; i < 30; i++) {
         // Need to place them randomly
-				var bat = new Bat(this.game, this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40), -200, this.enemyBulletPool);
+				var bat = new Bat(this.game, this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40), -200, this.enemyBulletPool, this.player);
 				this.enemies.add(bat);
 				bat.exists = false; 
 				bat.alive = false;
@@ -65,7 +65,10 @@ module Shapeshifter {
       // Setup first wave of Brown Bats
       if (!Shapeshifter.Game.EMPTY_ROOM) {
         // Blue Bat Wave
-        var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBlueBatWave, this);
+        // var blueBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBlueBatWave, this);
+
+        // Orange Bat Wave
+        var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startOrangeBatWave, this);
 
         /*
         var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
@@ -138,17 +141,26 @@ module Shapeshifter {
     }
 
     startBlueBatWave() {
-      this.game.time.events.repeat(300, 15, 
+      this.game.time.events.repeat(300, 20, 
         () => { 
           let blueBat:Bat = this.enemies.getFirstExists(false);
           if (blueBat)
             blueBat.reviveAsBlueBat();
          });
     }
+
+    startOrangeBatWave() {
+      this.game.time.events.repeat(300, 15, 
+        () => { 
+          let orangeBat:Bat = this.enemies.getFirstExists(false);
+          if (orangeBat)
+            orangeBat.reviveAsOrangeBat();
+         });
+    }
     
     createEnemyBulletPool() {
-      // this.enemyBulletPool = this.game.add.group();
-      this.enemyBulletPool = this.game.add.group(this.game.world, "enemyBulletPool");
+      this.enemyBulletPool = this.game.add.group();
+      // this.enemyBulletPool = this.game.add.group(this.game.world, "enemyBulletPool");
       this.enemyBulletPool.enableBody = true;
       this.enemyBulletPool.physicsBodyType = Phaser.Physics.ARCADE;
       this.enemyBulletPool.createMultiple(100, 'blueBatBullet');
