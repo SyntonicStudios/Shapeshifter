@@ -82,9 +82,11 @@ module Shapeshifter {
     } // create()
     
     update() {
+      // Handle Collisions
       this.physics.arcade.overlap(this.player, this.enemies, this.playerVsEnemy, null, this);
       this.physics.arcade.overlap(this.player.playerBulletPool, this.enemies, this.playerBulletVsEnemy, null, this);
       this.physics.arcade.overlap(this.player, this.powerUps, this.playerVsPowerUp, null, this);
+      this.physics.arcade.overlap(this.player, this.enemyBulletPool, this.playerVsEnemyBullet, null, this);
       
       // Constantly scroll the tileSprite background
       this.background.tilePosition.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
@@ -112,6 +114,14 @@ module Shapeshifter {
         player.hasWizardForm = true;
       } else {
         player.hasCrowForm = true;
+      }
+    }
+
+    playerVsEnemyBullet(player, bullet) {
+      bullet.kill();
+      if (player.takeDamageCooldown < 1) {
+        player.takeDamage(40);
+        this.playerHurtSound.play();
       }
     }
     
