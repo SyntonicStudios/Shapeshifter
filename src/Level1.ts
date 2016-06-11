@@ -15,6 +15,7 @@ module Shapeshifter {
     // Game Objects
     player: Shapeshifter.Player;
     enemies: Phaser.Group;
+    enemyBulletPool: Phaser.Group;
     powerUps: Phaser.Group;
     // healthBar: Phaser.Sprite;
     // bat: Shapeshifter.Bat;
@@ -42,11 +43,12 @@ module Shapeshifter {
       this.powerUps = this.game.add.group();
       
       // BATS!
+      this.createEnemyBulletPool();
       this.enemies = this.game.add.group();
       // this.enemies.create(300, 400, "bat1");
 			for (let i = 0; i < 30; i++) {
         // Need to place them randomly
-				var bat = new Bat(this.game, this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40), -200);
+				var bat = new Bat(this.game, this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40), -200, this.enemyBulletPool);
 				this.enemies.add(bat);
 				bat.exists = false; 
 				bat.alive = false;
@@ -59,8 +61,13 @@ module Shapeshifter {
       this.game.camera.y = 0;
       
       // --Timed High Level Events--
+
       // Setup first wave of Brown Bats
       if (!Shapeshifter.Game.EMPTY_ROOM) {
+        // Blue Bat Wave
+        var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBlueBatWave, this);
+
+        /*
         var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
         var powerUp1Timer = this.game.time.events.add(Phaser.Timer.SECOND * 7, 				() => { 
           var powerUp1 = new PowerUp(this.game, PowerUpType.Wizard);
@@ -70,8 +77,9 @@ module Shapeshifter {
         var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, this.startBrownBatWave, this);
         // Victory condition
         var victoryCondition = this.game.time.events.add(Phaser.Timer.SECOND * 36, this.stageDefeated, this);
+        */
       }
-    }
+    } // create()
     
     update() {
       this.physics.arcade.overlap(this.player, this.enemies, this.playerVsEnemy, null, this);
@@ -118,7 +126,28 @@ module Shapeshifter {
             brownBat.reviveAsBrownBat();
          });
     }
+
+    startBlueBatWave() {
+      this.game.time.events.repeat(300, 15, 
+        () => { 
+          let blueBat:Bat = this.enemies.getFirstExists(false);
+          if (blueBat)
+            blueBat.reviveAsBlueBat();
+         });
+    }
     
+    createEnemyBulletPool() {
+      // this.enemyBulletPool = this.game.add.group();
+      this.enemyBulletPool = this.game.add.group(this.game.world, "enemyBulletPool");
+      this.enemyBulletPool.enableBody = true;
+      this.enemyBulletPool.physicsBodyType = Phaser.Physics.ARCADE;
+      this.enemyBulletPool.createMultiple(100, 'blueBatBullet');
+      this.enemyBulletPool.setAll('anchor.x', 0.5);
+      this.enemyBulletPool.setAll('anchor.y', 0.5);
+      this.enemyBulletPool.setAll('outOfBoundsKill', true);
+      this.enemyBulletPool.setAll('checkWorldBounds', true);
+    }
+
     stageDefeated() {
       if (this.player.playerState != PlayerState.Dead) {
         let textStyle = { font: "20px Arial", fill: "#ff0000", align: "center" };
