@@ -68,7 +68,7 @@ module Shapeshifter {
         // var blueBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBlueBatWave, this);
 
         // Orange Bat Wave
-        var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startOrangeBatWave, this);
+        var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave(BatType.Blue, 300, 20), this);
 
         /*
         var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
@@ -127,43 +127,23 @@ module Shapeshifter {
         this.playerHurtSound.play();
       }
     }
-    
-    /**
-     * Lasts 9 seconds
-     */
-    startBrownBatWave() {
-      this.game.time.events.repeat(300, 30, 
+
+    startBatWave(batType:BatType, delay:number, repeatCount:number) {
+      this.game.time.events.repeat(delay, repeatCount, 
         () => { 
-          let brownBat:Bat = this.enemies.getFirstExists(false);
-          if (brownBat)
-            brownBat.reviveAsBrownBat();
+          let bat:Bat = this.enemies.getFirstExists(false);
+          if (bat)
+            // brownBat.reviveAsBrownBat();
+            bat.reviveBat(batType);
          });
     }
 
-    startBlueBatWave() {
-      this.game.time.events.repeat(300, 20, 
-        () => { 
-          let blueBat:Bat = this.enemies.getFirstExists(false);
-          if (blueBat)
-            blueBat.reviveAsBlueBat();
-         });
-    }
-
-    startOrangeBatWave() {
-      this.game.time.events.repeat(300, 15, 
-        () => { 
-          let orangeBat:Bat = this.enemies.getFirstExists(false);
-          if (orangeBat)
-            orangeBat.reviveAsOrangeBat();
-         });
-    }
-    
     createEnemyBulletPool() {
       this.enemyBulletPool = this.game.add.group();
       // this.enemyBulletPool = this.game.add.group(this.game.world, "enemyBulletPool");
       this.enemyBulletPool.enableBody = true;
       this.enemyBulletPool.physicsBodyType = Phaser.Physics.ARCADE;
-      this.enemyBulletPool.createMultiple(100, 'blueBatBullet');
+      this.enemyBulletPool.createMultiple(100, 'batBullet');
       this.enemyBulletPool.setAll('anchor.x', 0.5);
       this.enemyBulletPool.setAll('anchor.y', 0.5);
       this.enemyBulletPool.setAll('outOfBoundsKill', true);

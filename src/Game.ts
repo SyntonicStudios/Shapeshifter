@@ -23,7 +23,6 @@ module Shapeshifter {
     public static get RABBIT_WALK_SPEED():number { return 250; }
  
     constructor() {
- 
       // super(800, 600, Phaser.AUTO, 'content', null);
       super(Shapeshifter.Game.GAME_WIDTH, Shapeshifter.Game.GAME_HEIGHT, Phaser.AUTO, 'content', null);
  
@@ -33,7 +32,6 @@ module Shapeshifter {
       this.state.add('Level1', Level1, false);
  
       this.state.start('Boot');
- 
     }
  
   }
@@ -43,9 +41,9 @@ module Shapeshifter {
 // When the page has finished loading, create our game
 window.onload = () => {
   // To debug in the browser console, use this
-  game = new Shapeshifter.Game();
+  // game = new Shapeshifter.Game();
 
   // To avoid errors, use this
-  // var game;
-	// game = new Shapeshifter.Game();
+  var game;
+	game = new Shapeshifter.Game();
 }

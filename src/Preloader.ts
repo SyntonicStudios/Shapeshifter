@@ -25,7 +25,7 @@ module Shapeshifter {
       this.load.image('wizardBubble', 'assets/wizardBubble.png');
       this.load.image('crowBubble', 'assets/wizardBubble.png');
       this.load.image('wizardBullet', 'assets/wizardBullet.png');
-      this.load.image('blueBatBullet', 'assets/blueBatBullet.png');
+      this.load.image('batBullet', 'assets/batBullet.png');
       // Sounds
       this.load.audio('mobDying', 'assets/SFX/mobDying.ogg', true);
       this.load.audio('playerDying', 'assets/SFX/playerDying.ogg', true);
