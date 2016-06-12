@@ -65,10 +65,13 @@ module Shapeshifter {
       // Setup first wave of Brown Bats
       if (!Shapeshifter.Game.EMPTY_ROOM) {
         // Blue Bat Wave
-        var blueBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("BlueBat", 300, 20), this);
+        // var blueBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("BlueBat", 300, 20), this);
 
         // Orange Bat Wave
-        // var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("OrangeBat", 300, 20), this);
+        // var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("OrangeBat", 600, 10), this);
+
+        // Red Bat Wave
+        var redBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("RedBat", 3000, 2), this);
 
         /*
         var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
@@ -172,11 +175,11 @@ module Shapeshifter {
 
         this.game.debug.spriteInfo(this.player, 32, 32);
         // Sprite Body Debugging
-        this.game.debug.body(this.player);
+        // this.game.debug.body(this.player);
         // this.game.debug.body(this.enemies);
 
         // call renderGroup on each of the alive members    
-        this.enemies.forEachAlive((member) => this.game.debug.body(member),       this);
+        // this.enemies.forEachAlive((member) => this.game.debug.body(member),       this);
 
       } // end of if DEBUG MODE
     } // render()
