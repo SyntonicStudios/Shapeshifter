@@ -41,10 +41,10 @@ module Shapeshifter {
      } ), 
     new BatType (3, "RedBat", 150, 0xED1C31, 0xED1C31, 3, function(bat:Bat) {
       function redShooting() {
-        bat.game.time.events.repeat(500, bat.game.rnd.integerInRange(3, 6), 
+        bat.game.time.events.repeat(750, bat.game.rnd.integerInRange(3, 6), 
           () => bat.shootSpreadAtPlayer() );
       } 
-      let tweenDown = bat.game.add.tween(bat).to( { y: 150 }, 1500, Phaser.Easing.Quadratic.Out);
+      let tweenDown = bat.game.add.tween(bat).to( { y: 100 }, 1500, Phaser.Easing.Quadratic.Out);
       tweenDown.onComplete.addOnce(() => redShooting());
       let tweenUp = bat.game.add.tween(bat).to( { y: -100 }, 1500, Phaser.Easing.Quadratic.In);
       tweenUp.onComplete.addOnce(() => bat.kill(), bat);
@@ -130,13 +130,20 @@ module Shapeshifter {
 
     public shootSpreadAtPlayer() {
       // console.log('orange shot');
-      let bullet = this.enemyBulletPool.getFirstExists(false);
-      bullet.tint = this.tint;
-      bullet.reset(this.x, this.y - 20);
-      // bullet.body.velocity.y = 300;
-      // let shotAngle = this.getAngleTo(this.player);
-      let shotAngle = this.game.physics.arcade.angleBetween(this, this.player);
-      this.game.physics.arcade.velocityFromAngle(Phaser.Math.radToDeg(shotAngle) , 200, bullet.body.velocity);
+      let deadBulletsAvailable = this.enemyBulletPool.countDead();
+      // console.log("Dead Bullets Available: " + deadBulletsAvailable);
+      if (deadBulletsAvailable < 5) {
+        console.log("Not enough bullets available for spread shot:" + deadBulletsAvailable);
+        return;
+      }
+      var initialAngle = Phaser.Math.radToDeg(this.game.physics.arcade.angleBetween(this, this.player)) - 60;
+      for (let i=0; i < 5; i++) {
+        let bullet = this.enemyBulletPool.getFirstExists(false);
+        bullet.reset(this.x, this.y - 20);
+        bullet.tint = this.tint;
+        let shotAngle = initialAngle + ((i + 1) * 20);
+        this.game.physics.arcade.velocityFromAngle(shotAngle, 320, bullet.body.velocity);        
+      }
     }
   
     // TODO: Implement this cool damage effect in a more generic mob class  
