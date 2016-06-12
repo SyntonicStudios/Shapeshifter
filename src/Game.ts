@@ -41,9 +41,8 @@ module Shapeshifter {
 // When the page has finished loading, create our game
 window.onload = () => {
   // To debug in the browser console, use this
-  // game = new Shapeshifter.Game();
+  game = new Shapeshifter.Game();
 
   // To avoid errors, use this
-  var game;
-	game = new Shapeshifter.Game();
+  // var game; game = new Shapeshifter.Game();
 }

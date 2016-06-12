@@ -2,13 +2,69 @@
 
 module Shapeshifter {
  
-  export enum BatType { Brown, Blue, Orange };
+  // export enum BatType { Brown, Blue, Orange, Red };
 
+/*
   export const BatTypes = [
-    { name: "brownBat", health: 20, bodyTint: 0x2B1D10 }, 
-    { name: "blueBat", health: 40, bodyTint: 0x2BCFF4 }, 
-    { name: "orangeBat", health: 50, bodyTint: 0xF6AB26 }
+    { name: "brownBat", health: 20, bodyTint: 0x2B1D10, scale: 1 }, 
+    { name: "blueBat", health: 40, bodyTint: 0x2BCFF4, scale: 1 }, 
+    { name: "orangeBat", health: 50, bodyTint: 0xF6AB26, scale: 1 },
+    { name: "redBat", health: 150, bodyTint: 0xED1C31, scale: 3 }
   ];
+*/
+
+  export class BatType {
+    batTypeID: number;
+    name: string;
+    health: number;
+    bodyTint: number;
+    bulletTint: number;
+    scale: number;
+    behaviorOnSpawn: Function;
+
+    constructor(batTypeID: number, name: string, health: number, bodyTint: number, bulletTint: number, scale: number, behaviorOnSpawn: Function) {
+      this.batTypeID = batTypeID;
+      this.name = name;
+      this.health = health;
+      this.bodyTint = bodyTint;
+      this.bulletTint = bulletTint;
+      this.scale = scale;
+      this.behaviorOnSpawn = behaviorOnSpawn;
+    }
+  }
+
+/*
+  var tempBatTypes = [];
+
+  tempBatTypes.push(new BatType (0, "BrownBat", 20, 0x2B1D10, 0x2B1D10, 1, function(bat:Bat) { bat.body.velocity.y = 200; } ));
+  tempBatTypes.push(new BatType (1, "BlueBat", 40, 0x2BCFF4, 0x2BCFF4, 1, function(bat:Bat) { 
+    let tweenDown = bat.game.add.tween(bat).to( { y: 150 }, 1500, Phaser.Easing.Quadratic.Out);
+    tweenDown.onComplete.addOnce(bat.shootStraightDown, bat);
+    let tweenUp = bat.game.add.tween(bat).to( { y: -100 }, 1500, Phaser.Easing.Quadratic.In);
+    tweenUp.onComplete.addOnce(() => bat.kill(), bat);
+    tweenDown.chain(tweenUp);
+    tweenDown.start();
+  } ));
+  tempBatTypes.push(new BatType (2, "OrangeBat", 50, 0xF6AB26, 0xF6AB26, 1, function(bat:Bat) { bat.body.velocity.y = 200; } ));
+  tempBatTypes.push(new BatType (3, "RedBat", 150, 0xED1C31, 0xED1C31, 3, function(bat:Bat) { bat.body.velocity.y = 200; } ));
+
+  export const BatTypes = tempBatTypes;
+*/
+
+  export var BatTypes = [
+    new BatType (0, "BrownBat", 20, 0x2B1D10, 0x2B1D10, 1, function(bat:Bat) { bat.body.velocity.y = 200; } ), 
+    new BatType (1, "BlueBat", 40, 0x2BCFF4, 0x2BCFF4, 1, function(bat:Bat) { 
+      let tweenDown = bat.game.add.tween(bat).to( { y: 150 }, 1500, Phaser.Easing.Quadratic.Out);
+      tweenDown.onComplete.addOnce(bat.shootStraightDown, bat);
+      let tweenUp = bat.game.add.tween(bat).to( { y: -100 }, 1500, Phaser.Easing.Quadratic.In);
+      tweenUp.onComplete.addOnce(() => bat.kill(), bat);
+      tweenDown.chain(tweenUp);
+      tweenDown.start();
+    } ), 
+    new BatType (2, "OrangeBat", 50, 0xF6AB26, 0xF6AB26, 1, function(bat:Bat) { bat.body.velocity.y = 200; } ), 
+    new BatType (3, "RedBat", 150, 0xED1C31, 0xED1C31, 3, function(bat:Bat) { bat.body.velocity.y = 200; } ), 
+  ];
+  
 
   export class Bat extends Phaser.Sprite {
     
@@ -31,6 +87,15 @@ module Shapeshifter {
       this.visible = false;
     }
     
+/*
+    batTypes = [
+        { name: "brownBat", health: 20, bodyTint: 0x2B1D10, scale: 1 }, 
+        { name: "blueBat", health: 40, bodyTint: 0x2BCFF4, scale: 1 }, 
+        { name: "orangeBat", health: 50, bodyTint: 0xF6AB26, scale: 1 },
+        { name: "redBat", health: 150, bodyTint: 0xED1C31, scale: 3 }
+      ];
+*/
+
     update() {
       // Kill mob if below the screen
       // TODO: Add to a more generic Mob class
@@ -43,8 +108,10 @@ module Shapeshifter {
       // this.updateTint(); 
     }
     
-    reviveBat(batType:BatType):void {
-      let currentBatType = BatTypes[batType];
+    reviveBat(batTypeName:string):void {
+      // let currentBatType = BatTypes[batType];
+      let currentBatType:BatType = Shapeshifter.BatTypes.find((bt:BatType) => bt.name == batTypeName);
+      if (!currentBatType) console.log("Could not find BatType with batTypeName == " + batTypeName);
       super.revive(currentBatType.health);
       this.maxHealth = currentBatType.health;
       this.isDamaged = false;
@@ -53,6 +120,10 @@ module Shapeshifter {
       this.x = this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40);
       this.y = -50;
       this.animations.play('fly');
+      // Bat behavior
+      currentBatType.behaviorOnSpawn(this);
+
+/*
       switch (batType) {
         case BatType.Brown:
           this.body.velocity.y = 200;
@@ -69,9 +140,11 @@ module Shapeshifter {
           tweenDown.start();
           break;
       }
+*/
+
     }
 
-    shootStraightDown() {
+    public shootStraightDown() {
       // console.log('blue shot');
       // var bullet = this.game.enemyBulletPool.getFirstExists(false);
       let bullet = this.enemyBulletPool.getFirstExists(false);
@@ -81,7 +154,7 @@ module Shapeshifter {
       bullet.body.velocity.y = 300;
     }
 
-    shootAtPlayer() {
+    public shootAtPlayer() {
       // console.log('orange shot');
       let bullet = this.enemyBulletPool.getFirstExists(false);
       bullet.tint = this.tint;
@@ -91,6 +164,12 @@ module Shapeshifter {
       let shotAngle = this.game.physics.arcade.angleBetween(this, this.player);
       this.game.physics.arcade.velocityFromAngle(Phaser.Math.radToDeg(shotAngle) , 300, bullet.body.velocity);
     }
+
+    /*
+    public brownBatBehavior() {
+      this.body.velocity.y = 200;
+    }
+    */
   
     // TODO: Implement this cool damage effect in a more generic mob class  
 /*    Mob.prototype.updateTint = function () {
@@ -113,4 +192,5 @@ module Shapeshifter {
     };*/
     
   }
+
 }

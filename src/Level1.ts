@@ -65,10 +65,10 @@ module Shapeshifter {
       // Setup first wave of Brown Bats
       if (!Shapeshifter.Game.EMPTY_ROOM) {
         // Blue Bat Wave
-        // var blueBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBlueBatWave, this);
+        var blueBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("BlueBat", 300, 20), this);
 
         // Orange Bat Wave
-        var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave(BatType.Blue, 300, 20), this);
+        // var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("OrangeBat", 300, 20), this);
 
         /*
         var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
@@ -128,13 +128,13 @@ module Shapeshifter {
       }
     }
 
-    startBatWave(batType:BatType, delay:number, repeatCount:number) {
+    startBatWave(batTypeName:string, delay:number, repeatCount:number) {
       this.game.time.events.repeat(delay, repeatCount, 
         () => { 
           let bat:Bat = this.enemies.getFirstExists(false);
           if (bat)
             // brownBat.reviveAsBrownBat();
-            bat.reviveBat(batType);
+            bat.reviveBat(batTypeName);
          });
     }
 
