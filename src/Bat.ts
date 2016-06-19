@@ -50,9 +50,6 @@ module Shapeshifter {
       tweenUp.onComplete.addOnce(() => bat.kill(), bat);
       tweenDown.start();
       bat.game.time.events.add(4500, () => tweenUp.start(), this);
-      // let tweenStay = bat.game.add.tween(bat).to( { y: bat.y }, 1500, Phaser.Easing.Linear.None);
-      // tweenDown.chain(tweenUp);
-      // tweenStay.chain(tweenUp);()
     } )
   ];
 

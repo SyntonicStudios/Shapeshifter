@@ -71,19 +71,22 @@ module Shapeshifter {
         // var orangeBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("OrangeBat", 600, 10), this);
 
         // Red Bat Wave
-        var redBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("RedBat", 3000, 2), this);
+        // var redBatwave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("RedBat", 3000, 2), this);
 
-        /*
-        var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
-        var powerUp1Timer = this.game.time.events.add(Phaser.Timer.SECOND * 7, 				() => { 
+        
+        // var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, this.startBrownBatWave, this);
+        var wave1Timer = this.game.time.events.add(Phaser.Timer.SECOND, () => this.startBatWave("BrownBat", 300, 30), this);
+        var powerUp1Timer = this.game.time.events.add(Phaser.Timer.SECOND * 7, () => { 
           var powerUp1 = new PowerUp(this.game, PowerUpType.Wizard);
           this.powerUps.add(powerUp1); 
         }, this);
-        var wave2Timer = this.game.time.events.add(Phaser.Timer.SECOND * 9, this.startBrownBatWave, this);
-        var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, this.startBrownBatWave, this);
+        // var wave2Timer = this.game.time.events.add(Phaser.Timer.SECOND * 9, this.startBrownBatWave, this);
+        var wave2Timer = this.game.time.events.add(Phaser.Timer.SECOND * 9, () => this.startBatWave("BlueBat", 300, 20), this);
+        // var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, this.startBrownBatWave, this);
+        var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, () => this.startBatWave("OrangeBat", 600, 10), this);
         // Victory condition
         var victoryCondition = this.game.time.events.add(Phaser.Timer.SECOND * 36, this.stageDefeated, this);
-        */
+        
       }
     } // create()
     

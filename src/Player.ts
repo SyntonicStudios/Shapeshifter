@@ -3,18 +3,41 @@
 module Shapeshifter {
 
   export enum PlayerState { Grounded, Airborne, Dead, Transforming };
-  export enum PlayerForm { Rabbit, Wizard, Crow };
-  // export const Forms = { thing1: 'hey' }; 
-  export const Forms = [ 
-    { name: 'Rabbit', movementSpeed: 250, walkSidewaysName: 'walkSideways', walkDownName: 'walkDown', walkUpName: 'walkUp' }, 
-    { name: 'Wizard', movementSpeed: 150, walkSidewaysName: 'wizardWalk', walkDownName: 'wizardWalk', walkUpName: 'wizardWalk' }, 
-    { name: 'Crow', movementSpeed: 200, walkSidewaysName: 'walkSideways', walkDownName: 'walkSideways', walkUpName: 'walkSideways' } 
-  ]; 
- 
+
+  export class PlayerForm {
+    playerFormID: number;
+    name: string;
+    movementSpeed: number;
+    walkSidewaysAnimationKeyName: string;
+    walkDownAnimationKeyName: string;
+    walkUpAnimationKeyName: string;
+    abilityOne: Function;
+    abilityTwo: Function;
+    abilityThree: Function;
+
+    constructor(playerFormID: number, name: string, movementSpeed: number, walkSidewaysAnimationKeyName: string, walkDownAnimationKeyName: string, walkUpAnimationKeyName: string, abilityOne: Function, abilityTwo: Function, abilityThree: Function) {
+      this.playerFormID = playerFormID;
+      this.name = name;
+      this.movementSpeed = movementSpeed;
+      this.walkSidewaysAnimationKeyName = walkSidewaysAnimationKeyName;
+      this.walkDownAnimationKeyName = walkDownAnimationKeyName;
+      this.walkUpAnimationKeyName = walkUpAnimationKeyName;
+      this.abilityOne = abilityOne;
+      this.abilityTwo = abilityTwo;
+      this.abilityThree = abilityThree;
+    }
+  }
+
+  export var PlayerForms = [
+    new PlayerForm(0, "Rabbit", 250, "rabbitWalkSideways", "rabbitWalkDown", "rabbitWalkUp", null, null, null),
+    new PlayerForm(1, "Wizard", 150, "wizardWalk", "wizardWalk", "wizardWalk", null, null, null),
+    new PlayerForm(2, "Crow", 200, "wizardWalk", "wizardWalk", "wizardWalk", null, null, null)
+  ];
+
   export class Player extends Phaser.Sprite {
     playerState: PlayerState;
-    // playerForm: PlayerForm;
-    playerFormIndex: number;
+    playerForm: PlayerForm;
+    // playerFormIndex: number;
     healthBar: Phaser.Sprite;
     hasWizardForm: boolean;
     hasCrowForm: boolean;
@@ -39,9 +62,9 @@ module Shapeshifter {
       this.anchor.setTo(.5, .5);
       
       // Animations - Rabbit
-      this.animations.add('walkSideways', [0, 1], 5, true);
-      this.animations.add('walkDown', [2, 3], 5, true);
-      this.animations.add('walkUp', [4, 5], 5, true);
+      this.animations.add('rabbitWalkSideways', [0, 1], 5, true);
+      this.animations.add('rabbitWalkDown', [2, 3], 5, true);
+      this.animations.add('rabbitWalkUp', [4, 5], 5, true);
       // Wizard
       this.animations.add('wizardWalk', [0, 1, 2], 5, true);
       this.animations.add('wizardWalkAndShoot', [3, 4], 5, true);
@@ -60,7 +83,8 @@ module Shapeshifter {
       this.hasWizardForm = false;
       this.hasCrowForm = false;
       // this.playerForm = PlayerForm.Rabbit;
-      this.playerFormIndex = PlayerForm.Rabbit;
+      // Player starts off as a Rabbit
+      this.playerForm = Shapeshifter.PlayerForms.find((pf:PlayerForm) => pf.name == "Rabbit");
       
       // Sound
       this.playerDyingSound = this.game.add.audio('playerDying');
@@ -111,32 +135,32 @@ module Shapeshifter {
       switch (this.playerState) {
         case PlayerState.Grounded:
           if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            this.body.velocity.x = -Forms[this.playerFormIndex].movementSpeed;
-            this.animations.play(Forms[this.playerFormIndex].walkSidewaysName);
+            this.body.velocity.x = -this.playerForm.movementSpeed;
+            this.animations.play(this.playerForm.walkSidewaysAnimationKeyName);
             if (this.scale.x == 1) {
               this.scale.x = -1;
             }
           }
           else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            this.body.velocity.x = Forms[this.playerFormIndex].movementSpeed;
-            this.animations.play(Forms[this.playerFormIndex].walkSidewaysName);
+            this.body.velocity.x = this.playerForm.movementSpeed;
+            this.animations.play(this.playerForm.walkSidewaysAnimationKeyName);
             if (this.scale.x == -1) {
               this.scale.x = 1;
             }
           }
           
           if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-            this.body.velocity.y = Forms[this.playerFormIndex].movementSpeed;
-            if (this.body.velocity.x == 0) {this.animations.play(Forms[this.playerFormIndex].walkDownName);}
+            this.body.velocity.y = this.playerForm.movementSpeed;
+            if (this.body.velocity.x == 0) {this.animations.play(this.playerForm.walkDownAnimationKeyName);}
           }
           else if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            this.body.velocity.y = -Forms[this.playerFormIndex].movementSpeed;
-            if (this.body.velocity.x == 0) {this.animations.play(Forms[this.playerFormIndex].walkUpName);}
+            this.body.velocity.y = -this.playerForm.movementSpeed;
+            if (this.body.velocity.x == 0) {this.animations.play(this.playerForm.walkUpAnimationKeyName);}
           }
           
           // Action Button
           if (this.game.input.keyboard.isDown(Phaser.Keyboard.Q)) {
-            if (this.playerFormIndex == PlayerForm.Wizard) {
+            if (this.playerForm.name == "Wizard") {
               this.animations.play('wizardWalkAndShoot');
               if (this.transformationCooldown < 1) {
                 this.wizardShootingSound.play();
@@ -151,15 +175,14 @@ module Shapeshifter {
           
           // Transform into Wizard
           if (this.game.input.keyboard.isDown(Phaser.Keyboard.TWO)) {
-            if (this.hasWizardForm && this.playerFormIndex != PlayerForm.Wizard && (this.transformationCooldown < 1)) {
+            if (this.hasWizardForm && this.playerForm.name != "Wizard" && (this.transformationCooldown < 1)) {
               this.transformationSound.play();
               this.playerState = PlayerState.Transforming;
               this.transformationCooldown = 60;
               this.body.velocity.x = 0; 
               this.body.velocity.y = Shapeshifter.Game.VELOCITY_TO_MATCH_SCROLL_SPEED;
-              // Transform to Wizard
               this.loadTexture("wizardSpriteSheet", 0, true);
-              this.playerFormIndex = PlayerForm.Wizard;
+              this.playerForm = Shapeshifter.PlayerForms.find((pf:PlayerForm) => pf.name == "Wizard");
               this.playerState = PlayerState.Grounded;
               this.animations.play('wizardWalk');
             }
@@ -167,23 +190,22 @@ module Shapeshifter {
           
           // Transform into Rabbit
           if (this.game.input.keyboard.isDown(Phaser.Keyboard.ONE)) {
-            if (this.playerFormIndex != PlayerForm.Rabbit && this.transformationCooldown < 1) {
+            if (this.playerForm.name != "Rabbit" && this.transformationCooldown < 1) {
               this.transformationSound.play();
               this.playerState = PlayerState.Transforming;
               this.transformationCooldown = 60;
               this.body.velocity.x = 0; 
               this.body.velocity.y = Shapeshifter.Game.VELOCITY_TO_MATCH_SCROLL_SPEED;
-              // Transform to Wizard
               this.loadTexture("rabbit", 0, true);
-              this.playerFormIndex = PlayerForm.Rabbit;
+              this.playerForm = Shapeshifter.PlayerForms.find((pf:PlayerForm) => pf.name == "Rabbit");
               this.playerState = PlayerState.Grounded;
-              this.animations.play('walkUp');
+              this.animations.play("rabbitWalkUp");
             }
           }
              
           if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {    // No Keys Pressed 
             // this.animations.frame = 4;
-            this.animations.play(Forms[this.playerFormIndex].walkUpName);
+            this.animations.play(this.playerForm.walkUpAnimationKeyName);
           }
           break;
         case PlayerState.Dead:
