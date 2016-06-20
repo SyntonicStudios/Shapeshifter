@@ -84,8 +84,9 @@ module Shapeshifter {
         var wave2Timer = this.game.time.events.add(Phaser.Timer.SECOND * 9, () => this.startBatWave("BlueBat", 300, 20), this);
         // var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, this.startBrownBatWave, this);
         var wave3Timer = this.game.time.events.add(Phaser.Timer.SECOND * 18, () => this.startBatWave("OrangeBat", 600, 10), this);
+        var wave4Timer = this.game.time.events.add(Phaser.Timer.SECOND * 28, () => this.startBatWave("RedBat", 800, 6), this);
         // Victory condition
-        var victoryCondition = this.game.time.events.add(Phaser.Timer.SECOND * 36, this.stageDefeated, this);
+        var victoryCondition = this.game.time.events.add(Phaser.Timer.SECOND * 40, this.stageDefeated, this);
         
       }
     } // create()
@@ -93,7 +94,8 @@ module Shapeshifter {
     update() {
       // Handle Collisions
       this.physics.arcade.overlap(this.player, this.enemies, this.playerVsEnemy, null, this);
-      this.physics.arcade.overlap(this.player.playerBulletPool, this.enemies, this.playerBulletVsEnemy, null, this);
+      // this.physics.arcade.overlap(this.player.playerBulletPool, this.enemies, this.playerBulletVsEnemy, null, this);
+      this.physics.arcade.overlap(this.player.playerWeapon.bullets, this.enemies, this.playerBulletVsEnemy, null, this);
       this.physics.arcade.overlap(this.player, this.powerUps, this.playerVsPowerUp, null, this);
       this.physics.arcade.overlap(this.player, this.enemyBulletPool, this.playerVsEnemyBullet, null, this);
       

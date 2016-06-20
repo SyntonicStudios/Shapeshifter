@@ -37,7 +37,7 @@ module Shapeshifter {
   export class Player extends Phaser.Sprite {
     playerState: PlayerState;
     playerForm: PlayerForm;
-    // playerFormIndex: number;
+    playerWeapon: Phaser.Weapon;
     healthBar: Phaser.Sprite;
     hasWizardForm: boolean;
     hasCrowForm: boolean;
@@ -52,7 +52,7 @@ module Shapeshifter {
     // Keyboard Keys
     keyQ:Phaser.Key; keyW:Phaser.Key; keyEnter:Phaser.Key;
     // key1:Phaser.Key;
-    playerBulletPool: Phaser.Group;
+    // playerBulletPool: Phaser.Group;
  
     constructor(game: Phaser.Game, x: number, y: number) {
       super(game, x, y, 'rabbit', 0);
@@ -103,7 +103,17 @@ module Shapeshifter {
       // this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
       
       // Create Player Bullet Pool
-      this.createPlayerBulletPool();
+      // this.createPlayerBulletPool();
+
+      // Handle Weapon
+      this.playerWeapon = game.add.weapon(100, "wizardBullet");
+      this.playerWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+      this.playerWeapon.bulletAngleOffset = 90;
+      this.playerWeapon.bulletSpeed = 500;
+      this.playerWeapon.fireRate = 200;
+      this.playerWeapon.trackSprite(this, 14, 0);
+
+      this.playerWeapon.onFire.add(() => this.wizardShootingSound.play() )
     }
  
     update() {
@@ -163,12 +173,17 @@ module Shapeshifter {
             if (this.playerForm.name == "Wizard") {
               this.animations.play('wizardWalkAndShoot');
               if (this.transformationCooldown < 1) {
+                /*
                 this.wizardShootingSound.play();
                 this.transformationCooldown = 10;
                 var bullet = this.playerBulletPool.getFirstExists(false);
                 bullet.reset(this.x, this.y - 20);
 
                 bullet.body.velocity.y = -500;
+                */
+                // let shotAttempt = this.playerWeapon.fire();
+                this.playerWeapon.fire();
+                // if (!shotAttempt) { console.log("Could not fire bullet, none available."); }
               }
             }
           }
@@ -239,6 +254,7 @@ module Shapeshifter {
       let text = this.game.add.text(this.game.camera.x + 30, this.game.world.centerY - 40, gameOverText, textStyle);
     }
     
+    /*
     createPlayerBulletPool() {
       this.playerBulletPool = this.game.add.group();
       this.playerBulletPool.enableBody = true;
@@ -249,6 +265,7 @@ module Shapeshifter {
       this.playerBulletPool.setAll('outOfBoundsKill', true);
       this.playerBulletPool.setAll('checkWorldBounds', true);
     }
+    */
     
   }
 }

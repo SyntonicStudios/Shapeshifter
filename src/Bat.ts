@@ -22,35 +22,45 @@ module Shapeshifter {
     }
   }
 
+  function brownBatBehavior(bat:Bat) { 
+    bat.body.velocity.y = 200;
+   }
+
+  function blueBatBehavior(bat:Bat) { 
+    let tweenDown = bat.game.add.tween(bat).to( { y: 150 }, 1500, Phaser.Easing.Quadratic.Out);
+    tweenDown.onComplete.addOnce(bat.shootStraightDown, bat);
+    let tweenUp = bat.game.add.tween(bat).to( { y: -100 }, 1500, Phaser.Easing.Quadratic.In);
+    tweenUp.onComplete.addOnce(() => bat.kill(), bat);
+    tweenDown.chain(tweenUp);
+    tweenDown.start();
+   }
+
+  function orangeBatBehavior(bat:Bat) { 
+    bat.body.velocity.y = 120;
+    bat.game.time.events.repeat(800, 4, 
+      () => { 
+        bat.shootAtPlayer();
+        });
+   }
+
+  function redBatBehavior(bat:Bat) { 
+    function redShooting() {
+      bat.game.time.events.repeat(750, bat.game.rnd.integerInRange(3, 6), 
+        () => bat.shootSpreadAtPlayer() );
+    } 
+    let tweenDown = bat.game.add.tween(bat).to( { y: 100 }, 1500, Phaser.Easing.Quadratic.Out);
+    tweenDown.onComplete.addOnce(() => redShooting());
+    let tweenUp = bat.game.add.tween(bat).to( { y: -100 }, 1500, Phaser.Easing.Quadratic.In);
+    tweenUp.onComplete.addOnce(() => bat.kill(), bat);
+    tweenDown.start();
+    bat.game.time.events.add(4500, () => tweenUp.start(), this);
+   }
+
   export var BatTypes = [
-    new BatType (0, "BrownBat", 20, 0x2B1D10, 0x2B1D10, 1, function(bat:Bat) { bat.body.velocity.y = 200; } ), 
-    new BatType (1, "BlueBat", 40, 0x2BCFF4, 0x2BCFF4, 1, function(bat:Bat) { 
-      let tweenDown = bat.game.add.tween(bat).to( { y: 150 }, 1500, Phaser.Easing.Quadratic.Out);
-      tweenDown.onComplete.addOnce(bat.shootStraightDown, bat);
-      let tweenUp = bat.game.add.tween(bat).to( { y: -100 }, 1500, Phaser.Easing.Quadratic.In);
-      tweenUp.onComplete.addOnce(() => bat.kill(), bat);
-      tweenDown.chain(tweenUp);
-      tweenDown.start();
-    } ), 
-    new BatType (2, "OrangeBat", 50, 0xF6AB26, 0xF6AB26, 1, function(bat:Bat) { 
-      bat.body.velocity.y = 120;
-      bat.game.time.events.repeat(800, 4, 
-        () => { 
-          bat.shootAtPlayer();
-         });
-     } ), 
-    new BatType (3, "RedBat", 150, 0xED1C31, 0xED1C31, 3, function(bat:Bat) {
-      function redShooting() {
-        bat.game.time.events.repeat(750, bat.game.rnd.integerInRange(3, 6), 
-          () => bat.shootSpreadAtPlayer() );
-      } 
-      let tweenDown = bat.game.add.tween(bat).to( { y: 100 }, 1500, Phaser.Easing.Quadratic.Out);
-      tweenDown.onComplete.addOnce(() => redShooting());
-      let tweenUp = bat.game.add.tween(bat).to( { y: -100 }, 1500, Phaser.Easing.Quadratic.In);
-      tweenUp.onComplete.addOnce(() => bat.kill(), bat);
-      tweenDown.start();
-      bat.game.time.events.add(4500, () => tweenUp.start(), this);
-    } )
+    new BatType (0, "BrownBat", 20, 0x2B1D10, 0x2B1D10, 1, brownBatBehavior), 
+    new BatType (1, "BlueBat", 40, 0x2BCFF4, 0x2BCFF4, 1, blueBatBehavior), 
+    new BatType (2, "OrangeBat", 50, 0xF6AB26, 0xF6AB26, 1, orangeBatBehavior), 
+    new BatType (3, "RedBat", 150, 0xED1C31, 0xED1C31, 3, redBatBehavior)
   ];
 
   export class Bat extends Phaser.Sprite {
@@ -105,6 +115,7 @@ module Shapeshifter {
     }
 
     public shootStraightDown() {
+      if (!this.alive) return;
       // console.log('blue shot');
       // var bullet = this.game.enemyBulletPool.getFirstExists(false);
       let bullet = this.enemyBulletPool.getFirstExists(false);
@@ -115,6 +126,7 @@ module Shapeshifter {
     }
 
     public shootAtPlayer() {
+      if (!this.alive) return;
       // console.log('orange shot');
       let bullet = this.enemyBulletPool.getFirstExists(false);
       bullet.tint = this.tint;
@@ -126,6 +138,7 @@ module Shapeshifter {
     }
 
     public shootSpreadAtPlayer() {
+      if (!this.alive) return;
       // console.log('orange shot');
       let deadBulletsAvailable = this.enemyBulletPool.countDead();
       // console.log("Dead Bullets Available: " + deadBulletsAvailable);
@@ -142,7 +155,7 @@ module Shapeshifter {
         this.game.physics.arcade.velocityFromAngle(shotAngle, 320, bullet.body.velocity);        
       }
     }
-  
+
     // TODO: Implement this cool damage effect in a more generic mob class  
 /*    Mob.prototype.updateTint = function () {
 
