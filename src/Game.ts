@@ -9,7 +9,7 @@ module Shapeshifter {
   
     // Game-wide Constants
     public static get DEBUG_MODE():boolean { return true; }
-    public static get MUTE_SOUND():boolean { return false; }
+    public static get MUTE_SOUND():boolean { return true; }
     public static get EMPTY_ROOM():boolean { return false; }
     
     public static get GAME_WIDTH():number { return 600; }

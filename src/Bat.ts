@@ -22,9 +22,11 @@ module Shapeshifter {
     }
   }
 
+
   function brownBatBehavior(bat:Bat) { 
     bat.body.velocity.y = 200;
    }
+
 
   function blueBatBehavior(bat:Bat) { 
     let tweenDown = bat.game.add.tween(bat).to( { y: 150 }, 1500, Phaser.Easing.Quadratic.Out);
@@ -58,21 +60,27 @@ module Shapeshifter {
 
   export var BatTypes = [
     new BatType (0, "BrownBat", 20, 0x2B1D10, 0x2B1D10, 1, brownBatBehavior), 
+    // new BatType (0, "BrownBat", 20, 0x2B1D10, 0x2B1D10, 1, Shapeshifter.Bat.flyStraightDown), 
     new BatType (1, "BlueBat", 40, 0x2BCFF4, 0x2BCFF4, 1, blueBatBehavior), 
     new BatType (2, "OrangeBat", 50, 0xF6AB26, 0xF6AB26, 1, orangeBatBehavior), 
     new BatType (3, "RedBat", 150, 0xED1C31, 0xED1C31, 3, redBatBehavior)
   ];
 
   export class Bat extends Phaser.Sprite {
-    
     isDamaged: boolean;
     enemyBulletPool: Phaser.Group;
     player: Shapeshifter.Player;
+    batType: BatType;
+    // public batBehavior: Function;
  
     constructor(game: Phaser.Game, x: number, y: number, enemyBulletPool: Phaser.Group, player: Shapeshifter.Player) {
       super(game, x, y, 'bat', 0);
       this.enemyBulletPool = enemyBulletPool;
       this.player = player;
+
+      // let currentLevel:Level1 = game.state.getCurrentState();
+      // this.player = game.state.getCurrentState.player; 
+
       this.game.physics.arcade.enableBody(this);
       this.body.collideWorldBounds = false;
       this.anchor.setTo(0.5, 0);
@@ -98,20 +106,20 @@ module Shapeshifter {
     
     reviveBat(batTypeName:string):void {
       // let currentBatType = BatTypes[batType];
-      let currentBatType:BatType = Shapeshifter.BatTypes.find((bt:BatType) => bt.name == batTypeName);
-      if (!currentBatType) console.log("Could not find BatType with batTypeName == " + batTypeName);
-      super.revive(currentBatType.health);
-      this.scale.x = currentBatType.scale;
-      this.scale.y = currentBatType.scale;
-      this.maxHealth = currentBatType.health;
+      this.batType = Shapeshifter.BatTypes.find((bt:BatType) => bt.name == batTypeName);
+      if (!this.batType) console.log("Could not find BatType with batTypeName == " + batTypeName);
+      super.revive(this.batType.health);
+      this.scale.x = this.batType.scale;
+      this.scale.y = this.batType.scale;
+      this.maxHealth = this.batType.health;
       this.isDamaged = false;
-      this.tint = currentBatType.bodyTint;
+      this.tint = this.batType.bodyTint;
       // Send out bat
       this.x = this.game.rnd.between(40, Shapeshifter.Game.WORLD_WIDTH - 40);
       this.y = -50;
       this.animations.play('fly');
       // Bat behavior
-      currentBatType.behaviorOnSpawn(this);
+      this.batType.behaviorOnSpawn(this);
     }
 
     public shootStraightDown() {
@@ -154,6 +162,11 @@ module Shapeshifter {
         let shotAngle = initialAngle + ((i + 1) * 20);
         this.game.physics.arcade.velocityFromAngle(shotAngle, 320, bullet.body.velocity);        
       }
+    }
+
+    public static flyStraightDown(enemy:Bat) {
+      // this.body.velocity.y = 200;
+      enemy.body.velocity.y = 200;
     }
 
     // TODO: Implement this cool damage effect in a more generic mob class  

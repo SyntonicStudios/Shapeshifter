@@ -104,6 +104,7 @@ module Shapeshifter {
     }
     
     playerVsEnemy(player:Player, enemy) {
+      if (!enemy.alive) return;
       enemy.kill();
       if (player.takeDamageCooldown < 1) {
         player.takeDamage(20);
