@@ -36,6 +36,9 @@ module Shapeshifter {
       this.load.audio('wizardShootingSubdued', 'assets/SFX/wizardShootingSubdued.ogg', true);
       // Music
       this.load.audio('ssLevel1Theme', 'assets/ssLevel1Theme.ogg', true);
+      // Stages
+      this.load.tilemap("caveStageOneMap", "assets/stages/firstCave2.json", null, Phaser.Tilemap.TILED_JSON);
+      this.load.image("caveTiles", "assets/caveTileSet1.png");
     }
  
     create() {

@@ -13,6 +13,8 @@ module Shapeshifter {
     playerHurtSound: Phaser.Sound;
     enemyDyingSound: Phaser.Sound;
     // Game Objects
+    stageOneMap: Phaser.Tilemap;
+    debrisLayer: Phaser.TilemapLayer;
     player: Shapeshifter.Player;
     enemies: Phaser.Group;
     enemyBulletPool: Phaser.Group;
@@ -35,7 +37,18 @@ module Shapeshifter {
       this.playerHurtSound = this.game.add.audio('playerHurt');
       this.enemyDyingSound = this.game.add.audio('mobDying');
       if (Shapeshifter.Game.MUTE_SOUND) this.game.sound.mute = true;
+
+      // Setup Stage      
+      this.stageOneMap = this.game.add.tilemap("caveStageOneMap", 40, 40, 18, 72);
+      this.stageOneMap.addTilesetImage("caveTileSet1", "caveTiles");
       
+      this.debrisLayer = this.stageOneMap.createLayer("Debris", 720, 2880);
+      this.debrisLayer.fixedToCamera = false;
+      this.debrisLayer.outOfBoundsKill = false;
+      this.debrisLayer.y = -2000;
+      // this.stageOneMap.createLayer("Stairs");
+      // this.brickLayer.resizeWorld();
+
       // Setup player
       this.player = new Player(this.game, Shapeshifter.Game.WORLD_WIDTH / 2, Shapeshifter.Game.WORLD_HEIGHT - 20);
       
@@ -99,8 +112,10 @@ module Shapeshifter {
       this.physics.arcade.overlap(this.player, this.powerUps, this.playerVsPowerUp, null, this);
       this.physics.arcade.overlap(this.player, this.enemyBulletPool, this.playerVsEnemyBullet, null, this);
       
-      // Constantly scroll the tileSprite background
+      // Constantly scroll the tileSprite background as well as tileMapLayers
       this.background.tilePosition.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
+      this.debrisLayer.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
+      this.debrisLayer.x = this.game.camera.x;
     }
     
     playerVsEnemy(player:Player, enemy) {
@@ -176,10 +191,11 @@ module Shapeshifter {
         hasWizardForm: ${this.player.hasWizardForm}`
           , 10, 120);
         // Player X Scale: ${this.player.scale.x}
-        this.game.debug.text(`Player X Scale: ${this.player.scale.x}`
+        this.game.debug.text(`Player X Scale: ${this.player.scale.x} Debris Layer Y: ${this.debrisLayer.y}`
           , 10, 140);
 
-        this.game.debug.spriteInfo(this.player, 32, 32);
+        // this.game.debug.spriteInfo(this.player, 32, 32);
+        this.game.debug.cameraInfo(this.game.camera, 32, 32);
         // Sprite Body Debugging
         // this.game.debug.body(this.player);
         // this.game.debug.body(this.enemies);
