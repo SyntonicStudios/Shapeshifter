@@ -3,9 +3,10 @@
 module Shapeshifter {
  
   export class Boot extends Phaser.State {
- 
+
     preload() {
-      this.load.image('preloadBar', 'assets/loader.png');
+      let fileLocation = 'shapeshifter/';
+      this.load.image('preloadBar', fileLocation + 'assets/loader.png');
     }
  
     create() { 
