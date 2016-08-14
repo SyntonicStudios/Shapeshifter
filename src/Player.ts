@@ -100,6 +100,14 @@ module Shapeshifter {
       this.keyQ = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
       this.keyW = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
       this.keyEnter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+
+      // addKeyCapture to stop the browser from scrolling around
+      game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
+      game.input.keyboard.addKeyCapture(Phaser.Keyboard.UP);
+      game.input.keyboard.addKeyCapture(Phaser.Keyboard.DOWN);
+      game.input.keyboard.addKeyCapture(Phaser.Keyboard.LEFT);
+      game.input.keyboard.addKeyCapture(Phaser.Keyboard.RIGHT);
+
       // this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
       
       // Create Player Bullet Pool
