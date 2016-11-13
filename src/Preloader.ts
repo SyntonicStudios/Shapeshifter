@@ -7,7 +7,7 @@ module Shapeshifter {
     preloadBar: Phaser.Sprite;
  
     preload() {
-      let fileLocation = 'shapeshifter/';
+      let fileLocation = Shapeshifter.Game.USE_DEBUG_FILE_LOCATIONS ? '' : 'shapeshifter/';
       //  Set-up our preloader sprite
       this.preloadBar = this.add.sprite(200, 250, 'preloadBar');
       this.load.setPreloadSprite(this.preloadBar, 0);
@@ -38,8 +38,9 @@ module Shapeshifter {
       // Music
       this.load.audio('ssLevel1Theme', fileLocation + 'assets/ssLevel1Theme.ogg', true);
       // Stages
-      this.load.tilemap("caveStageOneMap", fileLocation + "assets/stages/firstCave2.json", null, Phaser.Tilemap.TILED_JSON);
+      this.load.tilemap("caveStageOneMap", fileLocation + "assets/stages/firstCave5.json", null, Phaser.Tilemap.TILED_JSON);
       this.load.image("caveTiles", fileLocation + "assets/caveTileSet1.png");
+      this.load.image('stalagmite', fileLocation + 'assets/caveStalagmite.png');
     }
  
     create() {

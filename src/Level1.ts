@@ -15,12 +15,15 @@ module Shapeshifter {
     // Game Objects
     stageOneMap: Phaser.Tilemap;
     debrisLayer: Phaser.TilemapLayer;
+    obstacleLayer: Phaser.TilemapLayer;
     player: Shapeshifter.Player;
     enemies: Phaser.Group;
+    obstacles: Phaser.Group;
     enemyBulletPool: Phaser.Group;
     powerUps: Phaser.Group;
     // healthBar: Phaser.Sprite;
     // bat: Shapeshifter.Bat;
+    collBetweenStagmiteAndPlayer: boolean;
  
     create() {
       // Setup World
@@ -46,6 +49,33 @@ module Shapeshifter {
       this.debrisLayer.fixedToCamera = false;
       this.debrisLayer.outOfBoundsKill = false;
       this.debrisLayer.y = -2000;
+
+      // Create Obstacles
+      this.obstacles = this.game.add.group();
+      this.obstacles.enableBody = true;
+      this.stageOneMap.createFromObjects("Stalagmites", 2, "stalagmite", 0, true, false, this.obstacles);
+      // Set all obstacles to immovable
+      
+      this.obstacles.forEach(function(item) {
+        item.body.immovable = true;
+        // item.body.debug = true;
+        // this.game.debug.body(item);
+      }, this);
+      
+      // this.obstacles.setAll('body.immovable', true);
+      this.obstacles.y = -2000;
+
+      /*
+      this.obstacleLayer = this.stageOneMap.createLayer("Obstacles", 720, 2880);
+      // this.obstacleLayer.fixedToCamera = false;
+      this.obstacleLayer.outOfBoundsKill = false;
+      this.obstacleLayer.y = -2000;
+      this.obstacleLayer.debug = true;
+      */
+
+      // Setup the stalagmites for collisions
+      // this.stageOneMap.setCollision(2, true, this.obstacleLayer, true);
+      // this.stageOneMap.setCollision(2);
       // this.stageOneMap.createLayer("Stairs");
       // this.brickLayer.resizeWorld();
 
@@ -111,11 +141,17 @@ module Shapeshifter {
       this.physics.arcade.overlap(this.player.playerWeapon.bullets, this.enemies, this.playerBulletVsEnemy, null, this);
       this.physics.arcade.overlap(this.player, this.powerUps, this.playerVsPowerUp, null, this);
       this.physics.arcade.overlap(this.player, this.enemyBulletPool, this.playerVsEnemyBullet, null, this);
+      this.physics.arcade.collide(this.obstacles, this.player);
       
       // Constantly scroll the tileSprite background as well as tileMapLayers
       this.background.tilePosition.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
       this.debrisLayer.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
       this.debrisLayer.x = this.game.camera.x;
+      // this.obstacleLayer.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
+      // this.obstacleLayer.x = this.game.camera.x;
+      this.obstacles.y += Shapeshifter.Game.GAME_SCROLL_SPEED;
+
+      // this.collBetweenStagmiteAndPlayer = this.game.physics.arcade.collide(this.player, this.obstacleLayer);
     }
     
     playerVsEnemy(player:Player, enemy) {
@@ -187,8 +223,11 @@ module Shapeshifter {
     
     render() {
       if (Shapeshifter.Game.DEBUG_MODE) {
-        this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
+/*        this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
         hasWizardForm: ${this.player.hasWizardForm}`
+          , 10, 120);*/
+        this.game.debug.text(`takeDamageCooldown: ${this.player.takeDamageCooldown}
+        collision: ${this.collBetweenStagmiteAndPlayer}`
           , 10, 120);
         // Player X Scale: ${this.player.scale.x}
         this.game.debug.text(`Player X Scale: ${this.player.scale.x} Debris Layer Y: ${this.debrisLayer.y}`
@@ -198,6 +237,7 @@ module Shapeshifter {
         this.game.debug.cameraInfo(this.game.camera, 32, 32);
         // Sprite Body Debugging
         // this.game.debug.body(this.player);
+        // this.obstacles.forEachAlive(x => this.game.debug.body(x), this);
         // this.game.debug.body(this.enemies);
 
         // call renderGroup on each of the alive members    

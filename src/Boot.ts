@@ -5,7 +5,7 @@ module Shapeshifter {
   export class Boot extends Phaser.State {
 
     preload() {
-      let fileLocation = 'shapeshifter/';
+      let fileLocation = Shapeshifter.Game.USE_DEBUG_FILE_LOCATIONS ? '' : 'shapeshifter/';
       this.load.image('preloadBar', fileLocation + 'assets/loader.png');
     }
  

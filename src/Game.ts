@@ -8,9 +8,10 @@ module Shapeshifter {
   export class Game extends Phaser.Game {
   
     // Game-wide Constants
-    public static get DEBUG_MODE():boolean { return false; }
-    public static get MUTE_SOUND():boolean { return false; }
-    public static get EMPTY_ROOM():boolean { return false; }
+    public static get DEBUG_MODE():boolean { return true; }
+    public static get USE_DEBUG_FILE_LOCATIONS():boolean { return true; }
+    public static get MUTE_SOUND():boolean { return true; }
+    public static get EMPTY_ROOM():boolean { return true; }
     
     public static get GAME_WIDTH():number { return 600; }
     public static get GAME_HEIGHT():number { return 800; }
